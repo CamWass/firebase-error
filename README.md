@@ -10,7 +10,7 @@
 npm i
 ```
 
-3. Deploy to firebase:
+3. Deploy hosting and cloud function to firebase:
 
 ```
 firebase deploy --project YOUR_PROJECT_ID
