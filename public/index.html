@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Firebase error demo</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha256-YLGeXaapI0/5IgZopewRJcFXomhRMlYYjugPLSyNjTY="
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="p-5">
+      <div class="row">
+        <div class="col-6">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="font-weight-bold">Info</h5>
+
+              <div>
+                Github repo:
+                <a
+                  target="_blank"
+                  href="https://github.com/CamWass/firebase-error"
+                >
+                  https://github.com/CamWass/firebase-error
+                </a>
+              </div>
+
+              <div>
+                Github issue:
+                <a
+                  target="_blank"
+                  href="https://github.com/firebase/firebase-js-sdk/issues/1526"
+                >
+                  https://github.com/firebase/firebase-js-sdk/issues/1526
+                </a>
+              </div>
+
+              <div>
+                Firebase js SDK version: <strong class="SDK-version"></strong>
+              </div>
+
+              <hr />
+
+              <h5 class="font-weight-bold">Issue description</h5>
+
+              <div class="mb-3">
+                <code>firebase.auth().confirmPasswordReset()</code> is throwing
+                the wrong error. Instead of <code>auth/user-disabled</code>, it
+                throws <code>auth/invalid-action-code</code>.
+              </div>
+
+              Steps to reproduce:
+              <ol>
+                <li>Create an email-password user.</li>
+                <li>Disable user.</li>
+                <li>Send password reset email to user.</li>
+                <li>Attempt to reset password using oobCode</li>
+              </ol>
+
+              <p>In Firefox 70.0.1, this error is thown:</p>
+
+              <pre> <code style="color:#e83e8c">{ code: "auth/invalid-action-code", message: "The action code is invalid. This can happen if the code is malformed, expired, or has already been used.", stack: "" }</code></pre>
+
+              <p>
+                instead of this more relevant error that is thrown in Chrome
+                78.0.3904.108:
+              </p>
+
+              <pre><code style="color:#e83e8c">{ code: "auth/user-disabled", message: "The user account has been disabled by an administrator." }</code></pre>
+
+              The latter error is more relevant because the action code is
+              valid, current, and unused, the problem is that the user is
+              disabled and it would be nice if this was reflected in the error
+              message.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">Auth info</h2>
+              <!-- Container where we'll display the user details -->
+              <div class="user-details-container">
+                <button class="btn btn-primary" id="sign-out">
+                  Sign out
+                </button>
+
+                <div>
+                  Firebase sign-in status:
+                  <span id="sign-in-status">Unknown</span>
+                </div>
+
+                <div>
+                  Firebase auth <code>currentUser</code> object value:
+                  <pre><code id="account-details">null</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">
+                Firebase Email &amp; Password Authentication
+              </h2>
+
+              <h5>Step 1: Create user</h5>
+
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  style="display:inline;width:auto;"
+                  type="text"
+                  id="email"
+                  placeholder="Email"
+                />
+                <input
+                  class="form-control"
+                  style="display:inline;width:auto;"
+                  type="text"
+                  value="qwerty123"
+                  id="password"
+                  placeholder="Password"
+                />
+              </div>
+
+              <button class="btn btn-primary" id="create-user">
+                Create user
+              </button>
+
+              <div>
+                Result:
+                <pre><code class="create-result"></code></pre>
+              </div>
+
+              <hr />
+
+              <h5>Step 2: Disable user</h5>
+
+              <p>
+                This will call a cloud function to disable the user since it
+                cannot be done client side.
+                <br />
+                This can also be done from the firebase console.
+              </p>
+
+              <button class="btn btn-primary" id="disable-user">
+                Disable user
+              </button>
+
+              <div>
+                Result:
+                <pre><code class="disable-result"></code></pre>
+              </div>
+
+              <hr />
+
+              <h5>Step 3: Send password reset email</h5>
+
+              <p>
+                This will send an email to the user with a link to reset their
+                password.
+                <br />
+                This can also be done from the firebase console.
+                <br />
+                You will need to copy the oobCode parameter from this link to
+                use in the next step.
+              </p>
+
+              <button class="btn btn-primary" id="send-password-reset">
+                Send email
+              </button>
+
+              <div>
+                Result:
+                <pre><code class="send-result"></code></pre>
+              </div>
+
+              <hr />
+
+              <h5>Step 4: Reset password using oobCode</h5>
+
+              <p class="mb-3">
+                This will attempt to reset the user's password to "querty123"
+                using the provided oobCode.
+                <br />
+                This is the part that is throwing different errors on different
+                browsers.
+              </p>
+
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  style="width:auto;"
+                  type="text"
+                  id="oobCode"
+                  placeholder="oobCode"
+                />
+              </div>
+
+              <button class="btn btn-primary" id="reset-password">
+                Reset Password thru code
+              </button>
+
+              <div>
+                Result:
+                <pre><code class="reset-result"></code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/__/firebase/7.5.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-functions.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

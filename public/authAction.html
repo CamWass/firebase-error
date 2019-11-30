@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Firebase error demo</title>
+  </head>
+  <body>
+    <h1>oobCode:</h1>
+    <h3 id="oobCode"></h3>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const oobCode = urlParams.get("oobCode");
+
+      console.log(oobCode);
+
+      document.getElementById("oobCode").textContent = oobCode;
+    </script>
+  </body>
+</html>
