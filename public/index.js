@@ -154,6 +154,9 @@ function initApp() {
     .addEventListener("click", resetPasswordThruCode, false);
   document.getElementById("sign-out").addEventListener("click", signOut, false);
 
+  // Reset oobCode input incase the browser has persisted an old value.
+  document.getElementById("oobCode").value = "";
+
   // Display firebase SDK version.
   document.querySelector(".SDK-version").textContent = firebase.SDK_VERSION;
 }
