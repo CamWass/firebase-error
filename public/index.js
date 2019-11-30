@@ -45,12 +45,9 @@ function disableUser() {
     return;
   }
 
-  const functions = firebase.functions();
-
-  functions.useFunctionsEmulator("http://localhost:5001");
-
-  // Auth idToken will sent automatically.
-  functions
+  // Call cloud function to disable user. Auth idToken will be sent automatically.
+  firebase
+    .functions()
     .httpsCallable("disableUser")()
     .then(() => {
       // Successfully disabled user.
