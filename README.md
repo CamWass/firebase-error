@@ -16,7 +16,7 @@ npm i
 firebase deploy --project YOUR_PROJECT_ID
 ```
 
-Then you can optionally change the firebase auth email action handler:
+Then you can change the firebase auth email action handler:
 
 1. Open your project in the Firebase console.
 2. Go to the Email Templates page in the Auth section.
